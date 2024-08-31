@@ -1,17 +1,12 @@
 import transactionModel from "../models/transactionModel.js";
 import userModel from "../models/userModel.js";
+import { calculateTotalExpenses, fetchTransactions } from "../utils/utils.js";
 
 export const getTransactionsController = async (req, res) => {
   try {
     const user_address = req.params.user_address;
 
-    const result = await fetch(
-      `https://api.etherscan.io/api?module=account&action=txlist&address=${user_address}&startblock=0&endblock=99999999&page=1&offset=10&sort=asc&apikey=CCDBJ3EFT2ABRJBCD18H4U46FGRV6J7IRU`
-    );
-
-    const data = await result.json();
-
-    const transactions = data.result;
+    const transactions = await fetchTransactions(user_address);
 
     // check if user exists in the database
 
@@ -61,8 +56,35 @@ export const getEthereumPriceController = async (req, res) => {
         res.status(200).json({
             ethereumPrice: data.ethereum.inr
         });
-
         
+    } catch (error) {
+        
+        res.status(500).json({ error, message: "Internal server error" });
+
+    }
+
+}
+
+export const getUserExpensesController = async (req, res) => {
+
+    try {
+        
+        const transaction = await fetchTransactions(req.params.user_address);
+
+        const totalExpenses = calculateTotalExpenses(transaction);
+
+        const result = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr");
+
+        const data = await result.json();
+        
+        const ethereumPrice = data.ethereum.inr;
+
+        res.status(200).json({
+            user_address: req.params.user_address,
+            totalExpenses,
+            ethereumPrice,
+        });
+
     } catch (error) {
         
         res.status(500).json({ error, message: "Internal server error" });
