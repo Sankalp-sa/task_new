@@ -1,9 +1,8 @@
 import express from "express";
+import userRouter from "./userRouter.js";
 
 const mainRouter = express.Router();
 
-mainRouter.get("/", (req, res) => {
-    res.send("Hello World");
-});
+mainRouter.use("/user", userRouter);   
 
 export default mainRouter;
