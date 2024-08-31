@@ -6,6 +6,10 @@ A simple API for retrieving Ethereum transaction data, current Ethereum price, a
 
 This API provides endpoints to interact with Ethereum blockchain data. It allows users to retrieve transaction history for specific Ethereum addresses, get the current Ethereum price in INR, and calculate total expenses for a given address.
 
+## Deployed Link
+
+https://task-new-one.vercel.app/
+
 ## Getting Started
 
 ### Dependencies
