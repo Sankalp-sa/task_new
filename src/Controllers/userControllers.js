@@ -48,3 +48,25 @@ export const getTransactionsController = async (req, res) => {
     res.status(500).json({ error, message: "Internal server error" });
   }
 };
+
+
+export const getEthereumPriceController = async (req, res) => {
+
+    try {
+
+        const result = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=inr");
+
+        const data = await result.json();
+
+        res.status(200).json({
+            ethereumPrice: data.ethereum.inr
+        });
+
+        
+    } catch (error) {
+        
+        res.status(500).json({ error, message: "Internal server error" });
+
+    }
+
+}
